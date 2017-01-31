@@ -1,0 +1,78 @@
+package web;
+
+import domain.Profile;
+import domain.Repair;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+@WebServlet(urlPatterns = "/addRepair")
+public class AddRepairHttpServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setContentType("text/html");
+
+        HttpSession session = request.getSession();
+
+        String nameOfDevice = request.getParameter("nameOfDevice");
+        String typeOfRepair = request.getParameter("typeOfRepair");
+
+        if (nameOfDevice == null  || nameOfDevice.equals("") || typeOfRepair == null || typeOfRepair.equals("")) {
+            response.sendRedirect("addRepair.jsp");
+        }
+        Profile profile = (Profile) session.getAttribute("profile");
+
+        if (profile == null) {
+            response.sendRedirect("addProfile.jsp");
+        }
+
+        Repair repair = new Repair();
+
+        Date timeNow = new Date(Calendar.getInstance().getTimeInMillis());
+
+        Calendar c = Calendar.getInstance();
+
+        c.getTimeInMillis();
+        c.add(Calendar.DATE, 1);
+
+        Date sqlTommorow = new Date(c.getTimeInMillis());
+
+        if(typeOfRepair.equals("Replace")){
+            repair.setPrice(50);
+        } else if (typeOfRepair.equals("Installation")){
+            repair.setPrice(25);
+        }else if (typeOfRepair.equals("Building")){
+            repair.setPrice(40);
+        }else if (typeOfRepair.equals("Cleaning")){
+            repair.setPrice(10);
+        }else if (typeOfRepair.equals("Repairing")){
+            repair.setPrice(30);
+        }
+
+        repair.setNameOfDeviceInRepair(nameOfDevice);
+        repair.setStartRepairDate(timeNow);
+        repair.setEndRepairDate(sqlTommorow);
+        repair.setProfile(profile);
+        List<Repair> repairs;
+        if(session.getAttribute("repairs") == null) {
+            repairs = new ArrayList<Repair>();
+            session.setAttribute("repairs",repairs);
+        }
+        else
+            repairs = (List<Repair>) session.getAttribute("repairs");
+        repairs.add(repair);
+        response.sendRedirect("addRepair.jsp");
+    }
+}
