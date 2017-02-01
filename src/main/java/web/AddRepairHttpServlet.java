@@ -45,25 +45,40 @@ public class AddRepairHttpServlet extends HttpServlet {
         Calendar c = Calendar.getInstance();
 
         c.getTimeInMillis();
-        c.add(Calendar.DATE, 1);
-
-        Date sqlTommorow = new Date(c.getTimeInMillis());
-
         if(typeOfRepair.equals("Replace")){
+            c.add(Calendar.DATE, 2);
+            java.sql.Date timeLater = new java.sql.Date(c.getTimeInMillis());
+
             repair.setPrice(50);
+            repair.setEndRepairDate(timeLater);
         } else if (typeOfRepair.equals("Installation")){
+            c.add(Calendar.DATE, 3);
+            java.sql.Date timeLater = new java.sql.Date(c.getTimeInMillis());
+
             repair.setPrice(25);
+            repair.setEndRepairDate(timeLater);
         }else if (typeOfRepair.equals("Building")){
+            c.add(Calendar.DATE, 4);
+            java.sql.Date timeLater = new java.sql.Date(c.getTimeInMillis());
+
             repair.setPrice(40);
+            repair.setEndRepairDate(timeLater);
         }else if (typeOfRepair.equals("Cleaning")){
+            c.add(Calendar.DATE, 1);
+            java.sql.Date timeLater = new java.sql.Date(c.getTimeInMillis());
+
             repair.setPrice(10);
+            repair.setEndRepairDate(timeLater);
         }else if (typeOfRepair.equals("Repairing")){
+            c.add(Calendar.DATE, 4);
+            java.sql.Date timeLater = new java.sql.Date(c.getTimeInMillis());
+
             repair.setPrice(30);
+            repair.setEndRepairDate(timeLater);
         }
 
         repair.setNameOfDeviceInRepair(nameOfDevice);
         repair.setStartRepairDate(timeNow);
-        repair.setEndRepairDate(sqlTommorow);
         repair.setProfile(profile);
         List<Repair> repairs;
         if(session.getAttribute("repairs") == null) {
